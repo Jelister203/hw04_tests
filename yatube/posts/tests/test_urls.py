@@ -69,6 +69,6 @@ class StaticURLTests(TestCase):
             '/profile/Unknown/': 'posts/profile.html',
             '/posts/1/': 'posts/post_detail.html'
         }
-        
+
         subTester(urls_templates_names_guests, self.guest)
         subTester(urls_templates_names_users, self.user)

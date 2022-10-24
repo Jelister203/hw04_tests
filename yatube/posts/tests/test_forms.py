@@ -1,10 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from datetime import datetime, timedelta
 from posts.models import Post, Group
-from django import forms
-
 
 User = get_user_model()
 
@@ -56,7 +53,7 @@ class PostPagesTests(TestCase):
             'text': 'Пост с группой для теста',
             'group': self.group.pk
         }
-        response = self.client.post(
+        self.client.post(
             reverse('posts:post_edit', kwargs={'post_id': post_id}),
             data=form_data,
             follow=True

@@ -26,7 +26,7 @@ class StaticURLTests(TestCase):
             '/auth/login/': 'users/login.html',
             '/auth/password_reset/': None
         }
-        
+
         subTester(urls_templates_names_guests, self.guest)
 
     def test_404(self):
