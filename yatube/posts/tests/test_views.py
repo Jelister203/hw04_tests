@@ -3,7 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from datetime import datetime, timedelta
 from posts.models import Post, Group
-
+from django import forms
 
 User = get_user_model()
 
@@ -38,7 +38,6 @@ class PostPagesTests(TestCase):
     def setUp(self):
         self.auth_client = Client()
         self.auth_client.force_login(self.author)
-        self.unauth_client = Client()
 
     def test_correct_template(self):
         templates_pages_names = {
@@ -128,11 +127,25 @@ class PostPagesTests(TestCase):
 
     def test_correct_context_post_create(self):
         response = self.auth_client.get(reverse('posts:post_create'))
-        pass
-        first_obj = response.context['form']
-        post_author_0 = first_obj.author
-        post_pub_date_0 = first_obj.pub_date
-        post_text_0 = first_obj.text
-        self.assertEqual(post_author_0, self.author)
-        self.assertEqual(post_pub_date_0.strftime('%d%E%Y'), self.date_1)
-        self.assertEqual(post_text_0, 'Пост')
+        form_fields = {
+            'text': forms.fields.CharField,
+            'group': forms.models.ModelChoiceField,
+        }
+        for value, expected in form_fields.items():
+            with self.subTest(value=value):
+                form_field = response.context['form'].fields[value]
+                self.assertIsInstance(form_field, expected)
+
+    def test_correct_context_post_edit(self):
+        response = self.auth_client.get(reverse('posts:post_edit',
+                                        kwargs={'post_id': 1}))
+        form_fields = {
+            'text': forms.fields.CharField,
+            'group': forms.models.ModelChoiceField,
+        }
+        for value, expected in form_fields.items():
+            with self.subTest(value=value):
+                form_field = response.context['form'].fields[value]
+                self.assertIsInstance(form_field, expected)
+        is_edit = response.context['is_edit']
+        self.assertEqual(is_edit, True)
