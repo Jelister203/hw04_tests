@@ -10,7 +10,7 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.author3 = User.objects.create(username='author3')
+        cls.author = User.objects.create(username='author')
         cls.group = Group.objects.create(
             title='Группа для форм',
             slug='slug',
@@ -18,13 +18,13 @@ class PostPagesTests(TestCase):
         )
         Post.objects.create(
             text='Пост для теста',
-            author=cls.author3,
+            author=cls.author,
             group=cls.group,
         )
 
     def setUp(self):
         self.client = Client()
-        self.client.force_login(self.author3)
+        self.client.force_login(self.author)
 
     def test_create_post(self):
         post_count = Post.objects.count()
