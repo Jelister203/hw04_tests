@@ -12,12 +12,12 @@ class PostPagesTests(TestCase):
         super().setUpClass()
         cls.author = User.objects.create(username='author')
         cls.group = Group.objects.create(
-            title='Группа для форм',
+            title='Группа',
             slug='slug',
-            description='Описание группы для форм',
+            description='Описание группы',
         )
         Post.objects.create(
-            text='Пост для теста',
+            text='Пост',
             author=cls.author,
             group=cls.group,
         )
@@ -46,7 +46,7 @@ class PostPagesTests(TestCase):
     def test_edit_post(self):
 
         post_id = Post.objects.filter(
-            text='Пост для теста',
+            text='Пост',
             group=self.group
         )[0].pk
         form_data = {
