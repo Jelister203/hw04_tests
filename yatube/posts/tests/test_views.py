@@ -13,7 +13,7 @@ class PostPagesTests(TestCase):
     def setUpClass(cls):
         date = datetime.now()
         cls.date_1 = date.strftime('%d%E%Y')
-        cls.date_2 = date + timedelta(days=1)
+        cls.date_2 = date + timedelta(days=10)
         cls.date_2 = cls.date_2.strftime('%d%E%Y')
         super().setUpClass()
         cls.author = User.objects.create(username='author')
@@ -23,17 +23,18 @@ class PostPagesTests(TestCase):
             slug='slug',
             description='Описание группы',
         )
-        Post.objects.create(
+        p1 = Post.objects.create(
             text='Пост',
             pub_date=cls.date_1,
             author=cls.author,
             group=cls.group,
         )
-        Post.objects.create(
+        p2 = Post.objects.create(
             text='Пост без группы',
             pub_date=cls.date_2,
             author=cls.author2,
         )
+        print(p1.pk, p2.pk)
 
     def setUp(self):
         self.auth_client = Client()
@@ -68,7 +69,7 @@ class PostPagesTests(TestCase):
         objects = response.context['page_obj']
         self.assertEqual(len(objects), 2)
 
-        first_obj = objects[0]
+        first_obj = objects[1]
         post_author_0 = first_obj.author
         post_pub_date_0 = first_obj.pub_date
         post_group_0 = first_obj.group
