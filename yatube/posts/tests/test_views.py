@@ -25,13 +25,13 @@ class PostPagesTests(TestCase):
         )
         Post.objects.create(
             text='Пост',
-            pub_date=cls.date_2,
+            pub_date=cls.date_1,
             author=cls.author,
             group=cls.group,
         )
         Post.objects.create(
             text='Пост без группы',
-            pub_date=cls.date_1,
+            pub_date=cls.date_2,
             author=cls.author2,
         )
 
