@@ -32,12 +32,12 @@ class StaticURLTests(TestCase):
             description='Группа')
 
     def test_404(self):
-        """Выбрасывает 404 при запросе на несуществующую страницу"""
+        # Выбрасывает 404 при запросе на несуществующую страницу
         fake_response = self.guest.get('/unexisting_page/')
         self.assertEqual(fake_response.status_code, self.NOT_FOUND)
 
     def test_302(self):
-        """Редирект гостей на вход"""
+        # Редирект гостей на вход
         guest_create_response = self.guest.get('/create/')
         self.assertRedirects(guest_create_response,
                              ('/auth/login/?next=/create/'))
@@ -46,7 +46,7 @@ class StaticURLTests(TestCase):
         self.assertRedirects(guest_edit_response,
                              ('/auth/login/?next=/posts/1/edit/'))
 
-        """Редирект при попытке редактирования чужого поста"""
+        # Редирект при попытке редактирования чужого поста
         user_edit_other_response = self.user.get('/posts/2/edit/')
         self.assertRedirects(user_edit_other_response, ('/posts/2/'))
 
@@ -57,12 +57,12 @@ class StaticURLTests(TestCase):
                     response = user_guest.get(address)
                     self.assertEqual(response.status_code, self.OK)
                     self.assertTemplateUsed(response, template)
-        """200 для авторизированных юзеров"""
+        # 200 для авторизированных юзеров
         urls_templates_names_users = {
             '/create/': 'posts/create_post.html',
             '/posts/1/edit/': 'posts/create_post.html'
         }
-        """Все 200 для гостей"""
+        # Все 200 для гостей
         urls_templates_names_guests = {
             '/': 'posts/index.html',
             '/group/slug/': 'posts/group_list.html',
