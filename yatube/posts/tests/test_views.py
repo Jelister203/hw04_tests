@@ -68,13 +68,13 @@ class PostContextTests(TestCase):
             description='Описание группы',
         )
         Post.objects.create(
+            text='Пост без группы',
+            author=cls.author2,
+        )
+        Post.objects.create(
             text='Пост',
             author=cls.author,
             group=cls.group,
-        )
-        Post.objects.create(
-            text='Пост без группы',
-            author=cls.author2,
         )
 
     def setUp(self):
