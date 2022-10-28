@@ -17,13 +17,13 @@ class StaticURLTests(TestCase):
             '/auth/login/': 'users/login.html',
             '/auth/password_reset/': None
         }
-        for address, template in urls_templates_names_guests.items():	    
+        for address, template in urls_templates_names_guests.items():
             with self.subTest(address=address):
                 response = self.guest.get(address)
                 self.assertEqual(response.status_code, self.OK)
                 if template:
                     self.assertTemplateUsed(response, template)
-        
+
     def test_404(self):
         fake_response = self.guest.get('auth/how_to_test_urls/')
         self.assertEqual(fake_response.status_code, self.NOT_FOUND)
