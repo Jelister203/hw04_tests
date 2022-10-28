@@ -68,13 +68,13 @@ class PostContextTests(TestCase):
             description='Описание группы',
         )
         Post.objects.create(
-            text='Пост без группы',
-            author=cls.author2,
-        )
-        Post.objects.create(
             text='Пост',
             author=cls.author,
             group=cls.group,
+        )
+        Post.objects.create(
+            text='Пост без группы',
+            author=cls.author2,
         )
 
     def setUp(self):
@@ -87,7 +87,7 @@ class PostContextTests(TestCase):
         objects = response.context['page_obj']
         self.assertEqual(len(objects), 2)
 
-        first_obj = objects[0]
+        first_obj = objects[1]
         post_author_0 = first_obj.author
         post_group_0 = first_obj.group
         post_text_0 = first_obj.text
