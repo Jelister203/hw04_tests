@@ -18,9 +18,35 @@ class PostModelTest(TestCase):
         )
         cls.post = Post.objects.create(
             author=cls.user,
-            text='Тестовый пост',
+            text='T' * 16,
         )
 
     def test_models_have_correct_object_names(self):
         self.assertEqual(str(PostModelTest.group), PostModelTest.group.title)
         self.assertEqual(str(PostModelTest.post), PostModelTest.post.text[:15])
+
+    def object_name_test(self):
+        post = self.post
+        self.assertEqual(post, 'T' * 15)
+
+    def test_verbose_name(self):
+        post = self.post
+        fields = {
+            'text': 'Текст поста',
+            'group': 'Группа',
+        }
+        for value, expected in fields.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    post._meta.get_field(value).verbose_name, expected)
+
+    def test_help_text(self):
+        post = self.post
+        fields = {
+            'text': 'Введите текст поста',
+            'group': 'Группа, к которой будет относиться пост',
+        }
+        for value, expected in fields.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    post._meta.get_field(value).help_text, expected)

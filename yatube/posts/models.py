@@ -36,7 +36,7 @@ class Post(models.Model):
                               related_name='posts',
                               null=True,
                               on_delete=models.SET_NULL,
-                              help_text=('Группа, к которой будет ',
+                              help_text=('Группа, к которой будет '
                                          'относиться пост')
                               )
 
