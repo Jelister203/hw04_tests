@@ -22,10 +22,10 @@ class PostModelTest(TestCase):
         )
 
     def test_models_have_correct_object_names(self):
-        self.assertEqual(str(PostModelTest.group), PostModelTest.group.title)
-        self.assertEqual(str(PostModelTest.post), PostModelTest.post.text[:15])
+        self.assertEqual(str(self.group), self.group.title)
+        self.assertEqual(str(self.post), self.post.text[:15])
 
-    def object_name_test(self):
+    def __str__test(self):
         post = self.post
         self.assertEqual(post, 'T' * 15)
 
@@ -38,7 +38,8 @@ class PostModelTest(TestCase):
         for value, expected in fields.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post._meta.get_field(value).verbose_name, expected)
+                    post._meta.get_field(value).verbose_name, expected
+                )
 
     def test_help_text(self):
         post = self.post
@@ -49,4 +50,5 @@ class PostModelTest(TestCase):
         for value, expected in fields.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post._meta.get_field(value).help_text, expected)
+                    post._meta.get_field(value).help_text, expected
+                )

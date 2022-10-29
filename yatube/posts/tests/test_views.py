@@ -1,8 +1,8 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from posts.models import Post, Group
-from django import forms
+from posts.models import Group, Post
 
 User = get_user_model()
 
@@ -18,12 +18,12 @@ class PostTemplateTests(TestCase):
             slug='slug',
             description='Описание группы',
         )
-        Post.objects.create(
+        cls.post = Post.objects.create(
             text='Пост',
             author=cls.author,
             group=cls.group,
         )
-        Post.objects.create(
+        cls.post2 = Post.objects.create(
             text='Пост без группы',
             author=cls.author2,
         )
@@ -35,19 +35,18 @@ class PostTemplateTests(TestCase):
     def test_correct_template(self):
         templates_pages_names = {
             reverse('posts:index'): 'posts/index.html',
-
-            (reverse('posts:group_list', kwargs={'slug': 'slug'})):
-                'posts/group_list.html',
-
-            (reverse('posts:profile', kwargs={'username': 'author'})):
-                'posts/profile.html',
-
-            (reverse('posts:post_detail', kwargs={'post_id': 1})):
-                'posts/post_detail.html',
-
-            (reverse('posts:post_edit', kwargs={'post_id': 1})):
-                'posts/create_post.html',
-
+            (
+                reverse('posts:group_list', kwargs={'slug': 'slug'})
+            ): 'posts/group_list.html',
+            (
+                reverse('posts:profile', kwargs={'username': 'author'})
+            ): 'posts/profile.html',
+            (
+                reverse('posts:post_detail', kwargs={'post_id': self.post.pk})
+            ): 'posts/post_detail.html',
+            (
+                reverse('posts:post_edit', kwargs={'post_id': self.post.pk})
+            ): 'posts/create_post.html',
             reverse('posts:post_create'): 'posts/create_post.html',
         }
         for reverse_name, template in templates_pages_names.items():
@@ -96,8 +95,9 @@ class PostContextTests(TestCase):
         self.assertEqual(post_text_0, 'Пост')
 
     def test_correct_context_group_list(self):
-        response = self.auth_client.get(reverse('posts:group_list',
-                                                kwargs={'slug': 'slug'}))
+        response = self.auth_client.get(
+            reverse('posts:group_list', kwargs={'slug': 'slug'})
+        )
         objects = response.context['page_obj']
 
         title_obj = response.context['group']
@@ -110,8 +110,9 @@ class PostContextTests(TestCase):
         self.assertEqual(post_text_0, 'Пост')
 
     def test_correct_context_profile(self):
-        response = self.auth_client.get(reverse('posts:profile',
-                                                kwargs={'username': 'author'}))
+        response = self.auth_client.get(
+            reverse('posts:profile', kwargs={'username': 'author'})
+        )
         objects = response.context['page_obj']
 
         self.assertEqual(response.context['author'], self.author)
@@ -123,8 +124,9 @@ class PostContextTests(TestCase):
         self.assertEqual(post_text_0, 'Пост')
 
     def test_correct_context_post_detail(self):
-        response = self.auth_client.get(reverse('posts:post_detail',
-                                                kwargs={'post_id': 1}))
+        response = self.auth_client.get(
+            reverse('posts:post_detail', kwargs={'post_id': 1})
+        )
 
         first_obj = response.context['post']
         post_author_0 = first_obj.author
@@ -144,8 +146,9 @@ class PostContextTests(TestCase):
                 self.assertIsInstance(form_field, expected)
 
     def test_correct_context_post_edit(self):
-        response = self.auth_client.get(reverse('posts:post_edit',
-                                        kwargs={'post_id': 1}))
+        response = self.auth_client.get(
+            reverse('posts:post_edit', kwargs={'post_id': 1})
+        )
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.models.ModelChoiceField,
@@ -184,14 +187,16 @@ class PostPaginatorTests(TestCase):
         self.auth_client.force_login(self.author)
 
     def test_correct_context_profile(self):
-        response = self.auth_client.get(reverse('posts:profile',
-                                                kwargs={'username': 'author'}))
+        response = self.auth_client.get(
+            reverse('posts:profile', kwargs={'username': 'author'})
+        )
         objects = response.context['page_obj']
         self.assertEqual(len(objects), 1)
 
     def test_correct_context_group_list(self):
-        response = self.auth_client.get(reverse('posts:group_list',
-                                                kwargs={'slug': 'slug'}))
+        response = self.auth_client.get(
+            reverse('posts:group_list', kwargs={'slug': 'slug'})
+        )
         objects = response.context['page_obj']
         self.assertEqual(len(objects), 1)
 

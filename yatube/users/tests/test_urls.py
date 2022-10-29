@@ -15,7 +15,7 @@ class StaticURLTests(TestCase):
             '/auth/signup/': None,
             '/auth/logout/': 'users/logged_out.html',
             '/auth/login/': 'users/login.html',
-            '/auth/password_reset/': None
+            '/auth/password_reset/': None,
         }
         for address, template in urls_templates_names_guests.items():
             with self.subTest(address=address):
