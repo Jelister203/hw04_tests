@@ -38,6 +38,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(Post.objects.count(), post_count + 1)
         new_post = Post.objects.get(pk=self.post.pk + 1)
         self.assertEqual(new_post.text, 'Text')
+        self.assertEqual(new_post.author, self.author)
 
     def test_edit_post(self):
         post_count = Post.objects.count()
@@ -53,7 +54,7 @@ class PostPagesTests(TestCase):
         )
         self.assertEqual(post_count, Post.objects.count())
         self.assertEqual(
-            Post.objects.get(pk=1).text, 'Пост с группой для теста'
+            Post.objects.get(pk=self.post.pk).text, 'Пост с группой для теста'
         )
 
     def test_guest_create(self):
